@@ -20,13 +20,19 @@ def main():
 
 
 def get(wiki, page):
+    sess = requests.Session()
+    try:
+        del sess.headers["User-Agent"]
+    except KeyError:
+        pass
+
     url = (
         "https://wikiwiki.jp/"
         + urllib.parse.quote(wiki, safe="", encoding="utf-8", errors="strict")
         + "/?cmd=edit&page="
         + urllib.parse.quote_plus(page, safe="", encoding="utf-8", errors="strict")
     )
-    resp = requests.get(url)
+    resp = sess.get(url)
     resp.raise_for_status()
 
     soup = bs4.BeautifulSoup(resp.text, "html.parser")
