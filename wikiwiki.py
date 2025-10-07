@@ -4,7 +4,7 @@ import requests
 import urllib.parse
 
 
-def main():
+def main() -> None:
     argp = argparse.ArgumentParser()
     subp = argp.add_subparsers(dest="cmd", required=True)
 
@@ -19,7 +19,7 @@ def main():
         raise RuntimeError
 
 
-def get(wiki, page):
+def get(wiki: str, page: str) -> None:
     sess = requests.Session()
     try:
         del sess.headers["User-Agent"]
@@ -36,7 +36,8 @@ def get(wiki, page):
     resp.raise_for_status()
 
     soup = bs4.BeautifulSoup(resp.text, "html.parser")
-    text = soup.select_one("#original-data-temp").attrs["value"]
+    tag = soup.select_one("#original-data-temp")
+    text = tag.attrs["value"] if tag is not None else ""
     print(text, end="")
 
 
