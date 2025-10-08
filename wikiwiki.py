@@ -44,6 +44,11 @@ def gethtml(wiki: str, page: str, *, pretty: bool = False) -> None:
         elem = copy.copy(elem)
         for chld in elem.select("div.caption-flybox") + elem.select("script"):
             chld.decompose()
+        for chld in elem.select("div.code-highlighter-root"):
+            try:
+                del chld.attrs["data-uuid"]
+            except KeyError:
+                pass
 
         text = elem.prettify() if pretty else str(elem)
     print(text, end="")
